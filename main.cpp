@@ -145,7 +145,7 @@ void QuickSort(int* data, size_t size){
 	QuickSort(data, 0, size - 1);
 }
 
-int BinarySearch(int* data, size_t low, size_t high, int key){
+int BinarySearch(int* data, int low, int high, int key){
 	if (high >= low){
 		size_t mid = low + (high - low) / 2;
 		if (data[mid] == key)
