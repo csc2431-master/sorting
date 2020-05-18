@@ -10,6 +10,7 @@ using std::setw;
 void SelectionSort(int* data, size_t size);
 void InsertionSort(int* data, size_t size);
 void PrintArray(const int* data, size_t size);
+void PrintArray(const int* data, size_t low, size_t high);
 void QuickSort(int* data, size_t size);
 int BinarySearch(int* data, size_t size, int key);
 
@@ -32,8 +33,11 @@ int main() {
 			SelectionSort(data[i], ELEMENTS);
 		else if (option == 2)
 			InsertionSort(data[i], ELEMENTS);
-		else if (option == 3)
+		else if (option == 3) {
+			cout << "-----------------------------------------" << endl;
 			QuickSort(data[i], ELEMENTS);
+			cout << "-----------------------------------------" << endl;
+		}
 		PrintArray(data[i], ELEMENTS);
 		cout << endl << endl;
 	}
@@ -94,11 +98,23 @@ void PrintArray(const int* data, size_t size){
 	cout << endl;
 }
 
+void PrintArray(const int* data, size_t low, size_t high){
+	cout << "[low = " << low << ", high = " << high << "]\t";
+	for (int i = low; i <= high; ++i) {
+		cout << setw(4) << data[i];
+	}
+	cout << endl;
+
+}
+
+
 size_t Partition(int* data, size_t low, size_t high) {
 	// Pick middle element as pivot
 	size_t midpoint = low + (high - low) / 2;
 	size_t pivot = data[midpoint];
+	int oldlow = low, oldhigh = high;
 
+	PrintArray(data, low, high);
 	bool done = false;
 	while (!done) {
 		// Increment lowIndex while numbers[lowIndex] < pivot
@@ -125,7 +141,7 @@ size_t Partition(int* data, size_t low, size_t high) {
 			high--;
 		}
 	}
-
+	PrintArray(data, oldlow, oldhigh);
 	return high;
 }
 
