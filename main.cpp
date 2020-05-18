@@ -10,11 +10,13 @@ using std::setw;
 void SelectionSort(int* data, size_t size);
 void InsertionSort(int* data, size_t size);
 void PrintArray(const int* data, size_t size);
+void QuickSort(int* data, size_t size);
+int BinarySearch(int* data, size_t size, int key);
 
 
 int main() {
 	size_t option;
-	cout << "1. Selection Sort\n2.Insertion Sort\n";
+	cout << "1. Selection Sort\n2. Insertion Sort\n3. Quick Sort\n";
 	cin >> option;
 	const size_t ELEMENTS = 7;
 	const size_t TESTS = 3;
@@ -30,8 +32,21 @@ int main() {
 			SelectionSort(data[i], ELEMENTS);
 		else if (option == 2)
 			InsertionSort(data[i], ELEMENTS);
+		else if (option == 3)
+			QuickSort(data[i], ELEMENTS);
 		PrintArray(data[i], ELEMENTS);
 		cout << endl << endl;
+	}
+
+	int value = 0, position;
+	while (value >= 0){
+		cout << "Search for: ";
+		cin >> value;
+		position = BinarySearch(data[0], ELEMENTS, value);
+		if (position == -1)
+			cout << "Not found" << endl;
+		else
+			cout << "Found in position " << position << endl;
 	}
 
 	return 0;
@@ -77,4 +92,72 @@ void PrintArray(const int* data, size_t size){
 		cout << setw(4) << data[i];
 	}
 	cout << endl;
+}
+
+size_t Partition(int* data, size_t low, size_t high) {
+	// Pick middle element as pivot
+	size_t midpoint = low + (high - low) / 2;
+	size_t pivot = data[midpoint];
+
+	bool done = false;
+	while (!done) {
+		// Increment lowIndex while numbers[lowIndex] < pivot
+		while (data[low] < pivot) {
+			low++;
+		}
+
+		// Decrement highIndex while pivot < numbers[highIndex]
+		while (pivot < data[high]) {
+			high--;
+		}
+
+		// If zero or one elements remain, then all numbers are
+		// partitioned. Return highIndex.
+		if (low >= high) {
+			done = true;
+		}
+		else {
+			// Swap numbers[lowIndex] and numbers[highIndex]
+			Swap(data[low], data[high]);
+
+			// Update lowIndex and highIndex
+			low++;
+			high--;
+		}
+	}
+
+	return high;
+}
+
+
+void QuickSort(int* data, size_t low, size_t high){
+	if (low >= high) {
+		return;
+	}
+
+	size_t lowEnd = Partition(data, low, high);
+	QuickSort(data, low, lowEnd);
+	QuickSort(data, lowEnd + 1, high);
+}
+
+
+void QuickSort(int* data, size_t size){
+	QuickSort(data, 0, size - 1);
+}
+
+int BinarySearch(int* data, size_t low, size_t high, int key){
+	if (high >= low){
+		size_t mid = low + (high - low) / 2;
+		if (data[mid] == key)
+			return mid;
+		else if (key > data[mid])
+			return BinarySearch(data, mid + 1, high, key);
+		else
+			return BinarySearch(data, low, mid - 1, key);
+	}
+	return -1;
+}
+
+int BinarySearch(int* data, size_t size, int key){
+	return BinarySearch(data, 0, size - 1, key);
 }
